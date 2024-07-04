@@ -14,7 +14,7 @@ app.get("/", (request, response) => {
   return response.status(234).send("Welcome to Bookstore");
 });
 
-// Route to create a new book
+// POST: Route to create a new book
 app.post("/books", async (request, response) => {
   try {
     // Check if required fields are provided
@@ -39,6 +39,41 @@ app.post("/books", async (request, response) => {
     const book = await Book.create(newBook);
 
     // Respond with the created book object
+    return response.status(200).send(book);
+  } catch (error) {
+    // Handle errors
+    console.log(error.message);
+    response.status(500).send({ message: error.message });
+  }
+});
+
+// GET: Route to get all books from the database
+app.get("/books", async (request, response) => {
+  try {
+    // Retrieve all books from the database
+    const books = await Book.find({});
+
+    // Respond with a JSON object containing count and data
+    return response.status(200).json({
+      count: books.length,
+      data: books,
+    });
+  } catch (error) {
+    // Handle errors
+    console.log(error.message);
+    response.status(500).send({ message: error.message });
+  }
+});
+
+// GET: Route to get one book by ID from the database
+app.get("/books/:id", async (request, response) => {
+  try {
+    const { id } = request.params;
+
+    // Retrieve one book by its ID from the database
+    const book = await Book.findById(id);
+
+    // Respond with the retrieved book object
     return response.status(200).send(book);
   } catch (error) {
     // Handle errors
