@@ -82,6 +82,61 @@ app.get("/books/:id", async (request, response) => {
   }
 });
 
+// UPDATE: Route to update a book by ID
+app.put("/books/:id", async (request, response) => {
+  try {
+    // Check if required fields are provided
+    if (
+      !request.body.title ||
+      !request.body.author ||
+      !request.body.publishYear
+    ) {
+      return response.status(400).send({
+        message: "Send all required fields: title, author, publishYear",
+      });
+    }
+
+    const { id } = request.params;
+
+    // Update the book in the database
+    const result = await Book.findByIdAndUpdate(id, request.body);
+
+    // If no book found with the given ID, return a 404 error
+    if (!result) {
+      return response.status(404).json({ message: "Book not found" });
+    }
+
+    // Respond with a success message
+    return response.status(200).send({ message: "Book updated successfully" });
+  } catch (error) {
+    // Handle errors
+    console.log(error.message);
+    response.status(500).send({ message: error.message });
+  }
+});
+
+// DELETE: Route to delete a book by ID from the database
+app.delete("/books/:id", async (request, response) => {
+  try {
+    const { id } = request.params;
+
+    // Delete the book from the database
+    const result = await Book.findByIdAndDelete(id);
+
+    // If no book found with the given ID, return a 404 error
+    if (!result) {
+      return response.status(404).json({ message: "Book not found" });
+    }
+
+    // Respond with a success message
+    return response.status(200).send({ message: "Book deleted successfully" });
+  } catch (error) {
+    // Handle errors
+    console.log(error.message);
+    response.status(500).send({ message: error.message });
+  }
+});
+
 // Connect to MongoDB and start the server
 mongoose
   .connect(mongoDBURL)
