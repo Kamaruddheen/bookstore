@@ -15,15 +15,15 @@ app.use(express.json());
 
 // Middleware to handling CORS POLICY
 // ? OPTION 1: Allow All Origins with Default of cors(*)
-// * app.use(cors());
+app.use(cors());
 // ? OPTION 2: Allow Custom Origins
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type"],
-  })
-);
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173",
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     allowedHeaders: ["Content-Type"],
+//   })
+// );
 
 // Default route (localhost/homepage)
 app.get("/", (request, response) => {
